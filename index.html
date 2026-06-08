@@ -2,176 +2,68 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Поиск — Здравоохранение РБ</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <title>Медицина | Вопросы 1-60 и 1-30 | Поиск по номеру и слову</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <div class="container">
+    <div class="app-wrapper">
       <div class="header">
-        <h1>🏥 Общественное здоровье и здравоохранение</h1>
-        <p>Республика Беларусь — вопросы 1–15 (JSON-база)</p>
-
-        <div class="search-row">
-          <div class="search-box search-box-text">
-            <input
-              type="text"
-              id="textTitleInput"
-              placeholder="📖 Поиск по ВОПРОСУ (слова в названии)"
-              autocomplete="off"
-            />
-          </div>
-          <div class="search-box search-box-answer">
-            <input
-              type="text"
-              id="textAnswerInput"
-              placeholder="📄 Поиск по ОТВЕТУ (слова в тексте)"
-              autocomplete="off"
-            />
-          </div>
-          <div class="search-box search-box-number">
-            <input
-              type="number"
-              id="numberSearchInput"
-              placeholder="№ вопроса"
-              min="1"
-              max="100"
-              autocomplete="off"
-            />
-          </div>
-          <div class="search-box search-box-clear">
-            <button id="clearButton" type="button">✖ Очистить всё</button>
-          </div>
-        </div>
-        <div class="search-info">
-          📌 Три поля: по вопросу / по ответу / по номеру. Работают
-          одновременно. Кнопка очищает всё.
-        </div>
+        <h1>📘 Медицинские вопросы (квалификация)</h1>
+        <p>
+          Часть 1 — вопросы 1–60 &nbsp;|&nbsp; Часть 2 — вопросы 1–30
+          &nbsp;|&nbsp; Быстрый поиск по номеру и ключевым словам
+        </p>
       </div>
 
-      <div id="questionsList"></div>
-      <footer>
-        Данные в JSON. Чтобы добавить вопросы 16–31, отредактируйте файл
-        questions.json.
-      </footer>
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="part1">
+          📖 Часть 1 (1–60)
+        </button>
+        <button class="tab-btn" data-tab="part2">📚 Часть 2 (1–30)</button>
+      </div>
+
+      <div class="search-panel">
+        <div class="search-group">
+          <label>🔢 Поиск по номеру вопроса</label>
+          <input
+            type="text"
+            id="searchNum"
+            placeholder="Например: 5, 12, 27"
+            autocomplete="off"
+          />
+          <div class="small-note">Введите число — найдёт точный номер</div>
+        </div>
+        <div class="search-group">
+          <label>🔍 Поиск по ключевому слову</label>
+          <input
+            type="text"
+            id="searchWord"
+            placeholder="инсулин, стерилизация, пролежни"
+            autocomplete="off"
+          />
+          <div class="small-note">Ищет внутри текста вопроса</div>
+        </div>
+        <button class="reset-btn" id="resetBtn">✖️ Сбросить фильтры</button>
+      </div>
+
+      <div id="statsLine" class="stats"></div>
+
+      <div id="part1Container" class="questions-container"></div>
+      <div
+        id="part2Container"
+        class="questions-container"
+        style="display: none"
+      ></div>
     </div>
+    <footer>
+      Данные из вашего файла (90 вопросов) | Поиск по номеру + слову
+    </footer>
 
-    <script>
-      let questionsData = [];
-
-      async function loadQuestions() {
-        try {
-          const response = await fetch("questions.json");
-          if (!response.ok)
-            throw new Error("Не удалось загрузить questions.json");
-          questionsData = await response.json();
-          renderQuestions(questionsData);
-        } catch (error) {
-          console.error(error);
-          document.getElementById("questionsList").innerHTML =
-            '<div class="no-results">❌ Ошибка загрузки данных. Убедитесь, что файл questions.json находится в той же папке.</div>';
-        }
-      }
-
-      function renderQuestions(questions) {
-        const container = document.getElementById("questionsList");
-        if (!questions.length) {
-          container.innerHTML =
-            '<div class="no-results">😕 Ничего не найдено. Попробуйте другие слова или номер вопроса.</div>';
-          return;
-        }
-
-        let html = "";
-        for (const q of questions) {
-          const answerHtml = q.answer
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/\n/g, "<br>");
-
-          html += `
-                <div class="question-card">
-                    <h2>${q.number}. ${escapeHtml(q.title)}</h2>
-                    <div class="answer-content">${answerHtml}</div>
-                </div>
-            `;
-        }
-        container.innerHTML = html;
-      }
-
-      function escapeHtml(str) {
-        return str
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;");
-      }
-
-      function searchQuestions() {
-        const titleTerm = document
-          .getElementById("textTitleInput")
-          .value.toLowerCase()
-          .trim();
-        const answerTerm = document
-          .getElementById("textAnswerInput")
-          .value.toLowerCase()
-          .trim();
-        const numberTerm = document.getElementById("numberSearchInput").value;
-
-        let filtered = questionsData;
-
-        // Фильтр по номеру
-        if (numberTerm !== "") {
-          const num = parseInt(numberTerm, 10);
-          if (!isNaN(num)) {
-            filtered = filtered.filter((q) => q.number === num);
-          }
-        }
-
-        // Фильтр по тексту в вопросе (заголовке)
-        if (titleTerm !== "" && filtered.length > 0) {
-          filtered = filtered.filter((q) =>
-            q.title.toLowerCase().includes(titleTerm),
-          );
-        }
-
-        // Фильтр по тексту в ответе
-        if (answerTerm !== "" && filtered.length > 0) {
-          filtered = filtered.filter((q) =>
-            q.answer.toLowerCase().includes(answerTerm),
-          );
-        }
-
-        renderQuestions(filtered);
-      }
-
-      function clearSearch() {
-        document.getElementById("textTitleInput").value = "";
-        document.getElementById("textAnswerInput").value = "";
-        document.getElementById("numberSearchInput").value = "";
-        renderQuestions(questionsData);
-      }
-
-      let debounceTimer;
-      function onSearchInput() {
-        clearTimeout(debounceTimer);
-        debounceTimer = setTimeout(() => {
-          searchQuestions();
-        }, 200);
-      }
-
-      loadQuestions();
-      document
-        .getElementById("textTitleInput")
-        .addEventListener("input", onSearchInput);
-      document
-        .getElementById("textAnswerInput")
-        .addEventListener("input", onSearchInput);
-      document
-        .getElementById("numberSearchInput")
-        .addEventListener("input", onSearchInput);
-      document
-        .getElementById("clearButton")
-        .addEventListener("click", clearSearch);
-    </script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
   </body>
 </html>

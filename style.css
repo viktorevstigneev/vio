@@ -1,170 +1,233 @@
 * {
+  margin: 0;
+  padding: 0;
   box-sizing: border-box;
 }
 
 body {
-  font-family: "Segoe UI", Roboto, system-ui, sans-serif;
-  background: #f0f2f5;
-  margin: 0;
-  padding: 24px 16px;
+  background: #e9f0f5;
+  font-family: "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  padding: 24px 20px;
+  color: #1a2c3e;
 }
 
-.container {
-  max-width: 1200px;
+.app-wrapper {
+  max-width: 1300px;
   margin: 0 auto;
 }
 
 .header {
-  background: white;
-  border-radius: 28px;
-  padding: 20px 28px;
   margin-bottom: 28px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e4e9f0;
 }
 
 .header h1 {
-  margin: 0 0 6px 0;
   font-size: 1.9rem;
-  color: #1a4d3e;
+  font-weight: 600;
+  background: linear-gradient(135deg, #1f6e8c, #0a4b64);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 8px;
 }
 
 .header p {
-  margin: 0 0 15px 0;
-  color: #2c5a6e;
-  font-weight: 500;
+  color: #4a627a;
+  font-size: 0.95rem;
 }
 
-.search-row {
+.tabs {
   display: flex;
   gap: 12px;
-  flex-wrap: wrap;
-  align-items: center;
-  margin-top: 5px;
+  margin: 20px 0 24px 0;
+  border-bottom: 2px solid #cbdde9;
+  padding-bottom: 8px;
 }
 
-.search-box {
-  background: white;
-}
-
-.search-box-text {
-  flex: 2;
-  min-width: 180px;
-}
-
-.search-box-answer {
-  flex: 2;
-  min-width: 180px;
-}
-
-.search-box-number {
-  flex: 0 0 110px;
-}
-
-.search-box-clear {
-  flex: 0 0 auto;
-}
-
-.search-row input {
-  width: 100%;
-  padding: 12px 18px;
-  font-size: 0.95rem;
-  border: 2px solid #cfdfe8;
-  border-radius: 60px;
-  outline: none;
-  background: white;
-  transition: 0.2s;
-}
-
-.search-row input:focus {
-  border-color: #1f8a5c;
-  box-shadow: 0 0 0 3px rgba(31, 138, 92, 0.15);
-}
-
-.search-box-clear button {
-  padding: 12px 20px;
-  font-size: 0.95rem;
-  font-weight: 500;
-  border: 2px solid #cfdfe8;
-  border-radius: 60px;
-  background: white;
-  color: #c2410c;
+.tab-btn {
+  background: transparent;
+  border: none;
+  padding: 10px 28px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-radius: 40px;
   cursor: pointer;
-  transition: 0.2s;
-  white-space: nowrap;
+  transition: all 0.2s;
+  color: #3a627a;
 }
 
-.search-box-clear button:hover {
-  background: #c2410c;
+.tab-btn.active {
+  background: #1f6e8c;
   color: white;
-  border-color: #c2410c;
+  box-shadow: 0 4px 10px rgba(31, 110, 140, 0.3);
 }
 
-.search-info {
+.tab-btn:not(.active):hover {
+  background: #d4e4ee;
+  color: #1f6e8c;
+}
+
+.search-panel {
+  background: white;
+  border-radius: 28px;
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  align-items: flex-end;
+}
+
+.search-group {
+  flex: 1;
+  min-width: 180px;
+}
+
+.search-group label {
   font-size: 0.8rem;
-  color: #4e6b7f;
-  margin-top: 12px;
-  margin-left: 5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #2c6e8f;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.search-group input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 1rem;
+  border: 1px solid #cbdde9;
+  border-radius: 20px;
+  outline: none;
+  transition: 0.2s;
+  background: #fefefe;
+}
+
+.search-group input:focus {
+  border-color: #1f6e8c;
+  box-shadow: 0 0 0 3px rgba(31, 110, 140, 0.2);
+}
+
+.reset-btn {
+  background: #e2eaf1;
+  border: none;
+  padding: 12px 22px;
+  border-radius: 40px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #2c5a74;
+  font-size: 0.9rem;
+  transition: 0.2s;
+}
+
+.reset-btn:hover {
+  background: #cbdde9;
+}
+
+.stats {
+  font-size: 0.85rem;
+  background: #eef3f8;
+  padding: 8px 18px;
+  border-radius: 30px;
+  display: inline-block;
+  margin-bottom: 20px;
+  color: #2c6e8f;
+}
+
+.questions-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .question-card {
   background: white;
-  border-radius: 24px;
-  margin-bottom: 28px;
-  padding: 20px 28px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  border: 1px solid #e9edf2;
+  border-radius: 28px;
+  padding: 22px 28px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  transition: all 0.15s;
+  border-left: 6px solid #1f6e8c;
 }
 
-.question-card h2 {
-  font-size: 1.55rem;
+.question-card.highlight {
+  border-left-color: #f4a261;
+  background: #fffdf9;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.q-num {
   font-weight: 700;
-  margin: 0 0 18px 0;
-  color: #1a3e2f;
-  border-left: 6px solid #1f8a5c;
-  padding-left: 18px;
+  font-size: 1.3rem;
+  color: #1f6e8c;
+  margin-bottom: 12px;
+  display: inline-block;
+  background: #e6f2f7;
+  padding: 4px 14px;
+  border-radius: 40px;
 }
 
-.answer-content {
+.q-text {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 12px 0 12px 0;
+  color: #0f3b4f;
+  line-height: 1.4;
+}
+
+.answer {
+  background: #f8fafc;
+  padding: 18px 20px;
+  border-radius: 20px;
+  margin-top: 12px;
+  font-size: 0.95rem;
   line-height: 1.55;
   color: #1e2f3c;
   white-space: pre-wrap;
-}
-
-.answer-content strong {
-  color: #1a6d4e;
-  font-weight: 700;
+  word-break: break-word;
 }
 
 .no-results {
   background: white;
-  border-radius: 40px;
+  padding: 40px;
   text-align: center;
-  padding: 48px 24px;
-  color: #5f6f82;
-  font-size: 1.2rem;
-  border: 1px solid #e9edf2;
+  border-radius: 36px;
+  color: #7f8c8d;
+  font-size: 1.1rem;
 }
 
 footer {
+  margin-top: 40px;
   text-align: center;
-  margin-top: 32px;
   font-size: 0.8rem;
-  color: #6c7e93;
+  color: #7f8c8d;
 }
 
-@media (max-width: 750px) {
-  .search-row {
+@media (max-width: 650px) {
+  body {
+    padding: 16px;
+  }
+  .question-card {
+    padding: 18px;
+  }
+  .search-panel {
     flex-direction: column;
+    align-items: stretch;
   }
-  .search-box-text,
-  .search-box-answer,
-  .search-box-number,
-  .search-box-clear {
-    flex: 1;
-    width: 100%;
+  .reset-btn {
+    align-self: flex-start;
   }
-  .search-box-clear button {
-    width: 100%;
-  }
+}
+
+mark {
+  background: #fff0b5;
+  padding: 0 2px;
+  border-radius: 8px;
+  color: #2c3e2f;
+}
+
+.small-note {
+  font-size: 0.75rem;
+  color: #6c8eae;
+  margin-top: 6px;
 }
